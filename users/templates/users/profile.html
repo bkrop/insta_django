@@ -1,0 +1,14 @@
+{% extends 'users/base.html' %}
+
+{% block title %}{{ object.user.username }}'s profile{% endblock %}
+
+{% block content %}
+    <h2>{{ object.user.username }}</h2>
+    <img src="{{ object.avatar.url }}" alt="" class="img-thumbnail">
+
+    <p></p>
+    <h2>{{ object.user.username }}'s Posts</h2>
+    {% for post in posts %}
+        <a href="{% url 'detail_post' pk=post.pk %}"><img src="{{ post.picture.url }}" alt="" class="img-thumbnail" style="height:200px;width:200px"></a>
+    {% endfor %}
+{% endblock %}

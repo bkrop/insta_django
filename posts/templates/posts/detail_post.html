@@ -1,0 +1,9 @@
+{% extends 'users/base.html' %}
+
+{% block title %}{{ object.author }}'s Post{% endblock %}
+
+{% block content %}
+    <img src="{{ object.picture.url }}" alt="Responsive image" class="img-fluid">
+    <h3>{{ object.description }}</h3>
+    <small>{{ object.date_of_create }}</small>
+{% endblock %}

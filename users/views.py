@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
-from .forms import UserRegisterForm
+from .forms import UserRegisterForm, CustomAuthenticationForm
 from django.contrib.auth.views import LoginView
-from .forms import CustomAuthenticationForm
+from django.views.generic import DetailView
+from .models import Profile
+from posts.models import Post
 
 def register(request):
     if request.method == 'POST':
@@ -16,3 +18,12 @@ def register(request):
 
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
+
+class ProfileDetailView(DetailView):
+    model = Profile
+    template_name = 'users/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['posts'] = Post.objects.filter(author=self.get_object())
+        return context
