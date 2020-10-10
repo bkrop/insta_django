@@ -11,4 +11,8 @@
     {% for post in posts %}
         <a href="{% url 'detail_post' pk=post.pk %}"><img src="{{ post.picture.url }}" alt="" class="img-thumbnail" style="height:200px;width:200px"></a>
     {% endfor %}
+    <form action="{% url 'follow_profile' pk=object.pk %}">
+        {% csrf_token %}
+        <button>Follow</button>
+    </form>
 {% endblock %}
