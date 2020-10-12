@@ -5,7 +5,12 @@
 {% block content %}
     {% for post in object_list %}
         <a href="{% url 'detail_post' post.id %}"><img src="{{ post.picture.url }}" alt="" class="img-thumbnail" style="width:200px; height: 200px;"></a>
-        <h4>{{ post.description }}</h4>
+        <h4>{{ post.description_hashtags|safe }}</h4>
         <small>{{ post.author }}</small>
+        <p></p>
+        {% for word in words %}
+        <small>{{word}}</small>
+        {% endfor %}
+        <a href=""></a>
     {% endfor %}
 {% endblock %}

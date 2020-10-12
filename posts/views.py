@@ -28,7 +28,8 @@ class PostListView(ListView):
 
     def get_queryset(self):
         profiles = Follow.objects.filter(follow_by=self.request.user.profile).values_list('follow_to', flat=True)
-        posts = Post.objects.filter(author_id__in=profiles)
-        print(profiles)
-        print(posts)
+        posts = Post.objects.filter(author_id__in=profiles).order_by('-date_of_create')
         return posts
+
+    
+        
