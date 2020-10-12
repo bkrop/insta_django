@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, ListView
-from .models import Post
+from .models import Post, Hashtag
 from users.models import Follow
 
 class PostCreateView(CreateView):
@@ -10,6 +10,12 @@ class PostCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user.profile
+        self.object = form.save()
+        words = form.cleaned_data['description'].split(" ")
+        for word in words:
+                if word[0] == "#":
+                    hashtag, created = Hashtag.objects.get_or_create(name=word[1:])
+                    hashtag.post.add(self.object)
         return super().form_valid(form)
 
 class PostDetailView(DetailView):

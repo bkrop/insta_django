@@ -11,8 +11,14 @@
     {% for post in posts %}
         <a href="{% url 'detail_post' pk=post.pk %}"><img src="{{ post.picture.url }}" alt="" class="img-thumbnail" style="height:200px;width:200px"></a>
     {% endfor %}
-    <form action="{% url 'follow_profile' pk=object.pk %}">
+    <form action="{% url 'follow_profile' pk=object.pk %}" class="followForm">
         {% csrf_token %}
-        <button>Follow</button>
+        <button type="button" class="followBtn" data-url="{% url 'follow_profile' pk=object.pk %}">
+        {% if object.pk not in following %}
+            Follow
+        {% else %}
+            Unfollow
+        {% endif %}
+        </button>
     </form>
 {% endblock %}
