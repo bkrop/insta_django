@@ -4,6 +4,6 @@
 
 {% block content %}
     <img src="{{ object.picture.url }}" alt="Responsive image" class="img-fluid">
-    <h3>{{ object.description }}</h3>
+    <h3>{{ object.description_hashtags|safe }}</h3>
     <small>{{ object.date_of_create }}</small>
 {% endblock %}

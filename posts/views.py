@@ -31,5 +31,12 @@ class PostListView(ListView):
         posts = Post.objects.filter(author_id__in=profiles).order_by('-date_of_create')
         return posts
 
-    
+def hashtag_posts(request, hashtag):
+    hashtag = Hashtag.objects.get(name=hashtag)
+    object_list = hashtag.post.all().order_by('-date_of_create')
+    print(object_list)
+    context = {
+        'object_list': object_list
+    }
+    return render(request, 'posts/homepage.html', context=context)
         

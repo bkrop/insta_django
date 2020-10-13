@@ -13,12 +13,14 @@
     {% endfor %}
     <form action="{% url 'follow_profile' pk=object.pk %}" class="followForm">
         {% csrf_token %}
-        <button type="button" class="followBtn" data-url="{% url 'follow_profile' pk=object.pk %}">
-        {% if object.pk not in following %}
-            Follow
-        {% else %}
-            Unfollow
-        {% endif %}
+        {% if object.user != request.user %}
+            <button type="button" class="followBtn" data-url="{% url 'follow_profile' pk=object.pk %}">
+            {% if object.pk not in following %}
+                Follow
+            {% else %}
+                Unfollow
+            {% endif %}
         </button>
+        {% endif %}
     </form>
 {% endblock %}

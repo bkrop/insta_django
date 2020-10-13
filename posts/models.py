@@ -13,7 +13,7 @@ class Post(models.Model):
         new_word = ''
         for word in words:
             if word[0] == '#':
-                new_word = f'<a href="">{word}</a>'
+                new_word = f'<a href="/posts/hashtag/{word[1:]}">{word}</a>'
                 new_words.append(new_word)
             else:
                 new_words.append(word)
