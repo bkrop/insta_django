@@ -14,6 +14,9 @@
       {% endif %}
       <a class="nav-link" href="{% url 'homepage' %}">HOME</a>
       <a class="nav-link disabled" href="#">Disabled link</a>
+      <form class="form-inline my-2 my-lg-0" action="{% url 'search' %}" method="GET">
+        <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search...">
+      </form>
     </nav>
     {% block content %}
     {% endblock %}

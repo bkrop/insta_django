@@ -6,7 +6,11 @@
     {% for post in object_list %}
         <a href="{% url 'detail_post' post.id %}"><img src="{{ post.picture.url }}" alt="" class="img-thumbnail" style="width:200px; height: 200px;"></a>
         <h4>{{ post.description_hashtags|safe }}</h4>
-        <small><a href="{% url 'profile_detail' post.author.pk %}">{{ post.author }}</a></small>
+        <small><a href="{% url 'profile_detail' post.author.pk %}">{{ post.author }}</a> Likes: {{ post.likes_counter }}</small>
+        <form action="{% url 'like_post' post.id %}" method="get">
+            {% csrf_token %}
+            <button>Like</button>
+        </form>
         <p></p>
         {% for word in words %}
             <small>{{ word }}</small>

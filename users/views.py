@@ -6,6 +6,7 @@ from .models import Profile, Follow
 from posts.models import Post
 import json
 from django.http import HttpResponse
+from django.contrib.auth.models import User
 
 def register(request):
     if request.method == 'POST':
@@ -47,3 +48,10 @@ def follow_profile(request, pk):
         'text': text
     }
     return HttpResponse(json.dumps(data))
+
+def search(request):
+    profiles = User.objects.filter(username__contains=request.GET.get('search'))
+    context = {
+        'profiles': profiles
+    }
+    return render(request, 'users/results.html', context=context)

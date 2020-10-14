@@ -40,3 +40,10 @@ def hashtag_posts(request, hashtag):
     }
     return render(request, 'posts/homepage.html', context=context)
         
+def like_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+    profile = request.user.profile
+    if profile in post.like.all():
+        post.like.remove(profile)
+    else:
+        post.like.add(profile)

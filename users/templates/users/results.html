@@ -1,0 +1,9 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Results{% endblock %}
+
+{% block content %}
+    {% for profile in profiles %}
+        <h3>{{ profile.username }}</h3>
+    {% endfor %}
+{% endblock %}

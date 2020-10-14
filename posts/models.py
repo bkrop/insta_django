@@ -6,6 +6,7 @@ class Post(models.Model):
     description = models.TextField(max_length=200)
     picture = models.ImageField(upload_to='media')
     date_of_create = models.DateTimeField(auto_now_add=True)
+    like = models.ManyToManyField(Profile, related_name='likes_given')
 
     def description_hashtags(self):
         words = self.description.split(' ')
@@ -18,6 +19,10 @@ class Post(models.Model):
             else:
                 new_words.append(word)
         return ' '.join(new_words)
+
+    def likes_counter(self):
+        number = self.like.all().count()
+        return number
 
 class Hashtag(models.Model):
     name = models.CharField(max_length=20)
