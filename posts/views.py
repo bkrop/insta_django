@@ -1,7 +1,10 @@
+from json import dumps
 from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, ListView
 from .models import Post, Hashtag
 from users.models import Follow
+import json
+from django.http import HttpResponse
 
 class PostCreateView(CreateView):
     model = Post
@@ -43,7 +46,15 @@ def hashtag_posts(request, hashtag):
 def like_post(request, post_id):
     post = Post.objects.get(id=post_id)
     profile = request.user.profile
+    like = None
     if profile in post.like.all():
         post.like.remove(profile)
+        like = False
     else:
         post.like.add(profile)
+        like = True
+    data = {
+        'counter': post.likes_counter(),
+        'like': like
+    }
+    return HttpResponse(json.dumps(data))

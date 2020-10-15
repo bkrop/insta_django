@@ -6,10 +6,16 @@
     {% for post in object_list %}
         <a href="{% url 'detail_post' post.id %}"><img src="{{ post.picture.url }}" alt="" class="img-thumbnail" style="width:200px; height: 200px;"></a>
         <h4>{{ post.description_hashtags|safe }}</h4>
-        <small><a href="{% url 'profile_detail' post.author.pk %}">{{ post.author }}</a> Likes: {{ post.likes_counter }}</small>
-        <form action="{% url 'like_post' post.id %}" method="get">
+        <small><a href="{% url 'profile_detail' post.author.pk %}">{{ post.author }}</a> Likes: <span class="counter" id="{{ post.id }}">{{ post.likes_counter }}</small></span>
+        <form action="{% url 'like_post' post.id %}" method="get" class="likeForm">
             {% csrf_token %}
-            <button>Like</button>
+            <button type="button" data-url="{% url 'like_post' post.id %}" class="likeBtn btn" id="{{ post.id }}">
+                {% if post in request.user.profile.likes_given.all %}
+                    <i class="fas fa-heart" style="color: red;"></i>
+                {% else %}
+                    <i class="far fa-heart" style="color: red;"></i>
+                {% endif %} 
+            </button>
         </form>
         <p></p>
         {% for word in words %}

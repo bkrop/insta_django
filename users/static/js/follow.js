@@ -1,5 +1,5 @@
-$(document).ready(function(){
-    $(".followBtn").click(function(){
+$(document).ready(function () {
+    $(".followBtn").click(function () {
         var serializedData = $(".followForm").serialize();
         let btn = $(this);
         let url = btn.attr('data-url');
@@ -8,7 +8,7 @@ $(document).ready(function(){
             data: serializedData,
             type: 'get',
             dataType: 'json',
-            success: function(data){
+            success: function (data) {
                 console.log(data);
                 btn.text(data.text)
             }
