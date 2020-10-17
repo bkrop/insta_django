@@ -1,0 +1,17 @@
+{% extends 'users/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+    {% for message in messages %}
+        <h6>{{ message.content }}</h6>
+        <small>{{ message.message_by }} / {{ message.date_of_create }}</small>
+    {% endfor %}
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button>Send</button>
+    </form>
+{% endblock %}

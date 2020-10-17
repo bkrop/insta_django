@@ -11,3 +11,9 @@ class Profile(models.Model):
 class Follow(models.Model):
     follow_to = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='followers')
     follow_by = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='following')
+
+class Message(models.Model):
+    message_by = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='inbox')
+    message_to = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='sent')
+    content = models.TextField(max_length=250, null=False, blank=False)
+    date_of_create = models.DateTimeField(auto_now_add=True)
