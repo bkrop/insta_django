@@ -1,0 +1,16 @@
+{% extends 'users/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+    <div class="messages">
+        {% include 'users/messages.html' %}
+    </div>
+
+    <form action="" method="POST" class="messageForm" data-url="{% url 'create_message' profile_pk %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="button" class="messageBtn">Send</button>
+    </form>
+{% endblock %}

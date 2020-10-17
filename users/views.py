@@ -5,9 +5,10 @@ from django.views.generic import DetailView, CreateView
 from .models import Profile, Follow, Message
 from posts.models import Post
 import json
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.forms.models import model_to_dict
 
 def register(request):
     if request.method == 'POST':
@@ -57,22 +58,39 @@ def search(request):
     }
     return render(request, 'users/results.html', context=context)
 
-class Chat(CreateView):
+class MessageCreateView(CreateView):
     model = Message
     fields = ['content']
-    template_name = 'users/chat.html'
-
-    def form_valid(self, form):
-        form.instance.message_by = self.request.user.profile
-        message_to = Profile.objects.get(id=self.kwargs['profile_pk'])
-        form.instance.message_to = message_to
-        return super().form_valid(form)
+    template_name = 'users/create_message.html'
+    
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            if request.method == 'POST':
+                sender = self.request.user.profile
+                receiver_pk = self.kwargs['profile_pk']
+                print(receiver_pk)
+                receiver = Profile.objects.get(id=receiver_pk)
+                new_message = Message.objects.create(
+                    message_by=sender,
+                    message_to=receiver,
+                    content = form.cleaned_data['content'])
+                return JsonResponse({'message': model_to_dict(new_message)}, status=200)
+        else:
+            return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
-        context = super(Chat, self).get_context_data(**kwargs)
-        current_user_profile = self.request.user.profile
-        second_profile = Profile.objects.get(pk=self.kwargs.get('profile_pk'))
-        context['messages'] = Message.objects.filter(
-            Q(message_to=current_user_profile, message_by=second_profile)|
-            Q(message_to=second_profile, message_by=current_user_profile)).order_by('date_of_create')
+        context = super(MessageCreateView, self).get_context_data(**kwargs)
+        context['profile_pk'] = self.kwargs['profile_pk']
         return context
+
+def messages(request, profile_pk):
+    current_user_profile = request.user.profile
+    second_profile = Profile.objects.get(pk=profile_pk)
+    messages = Message.objects.filter(
+        Q(message_to=current_user_profile, message_by=second_profile)|
+        Q(message_to=second_profile, message_by=current_user_profile)).order_by('date_of_create')
+    context = {
+        'messages': messages
+    }
+    return render(request, 'users/messages.html', context=context)

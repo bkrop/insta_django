@@ -1,0 +1,4 @@
+{% for message in messages %}
+    <h6>{{ message.content }}</h6>
+    <small>{{ message.message_by }} / {{ message.date_of_create }}</small>
+{% endfor %}
