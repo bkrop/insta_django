@@ -81,7 +81,13 @@ class MessageCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(MessageCreateView, self).get_context_data(**kwargs)
-        context['profile_pk'] = self.kwargs['profile_pk']
+        profile_pk = context['profile_pk'] = self.kwargs['profile_pk']
+        current_user_profile = self.request.user.profile
+        second_profile = Profile.objects.get(pk=profile_pk)
+        messages = Message.objects.filter(
+            Q(message_to=current_user_profile, message_by=second_profile)|
+            Q(message_to=second_profile, message_by=current_user_profile)).order_by('date_of_create')
+        context['messages'] = messages
         return context
 
 def messages(request, profile_pk):
