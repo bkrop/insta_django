@@ -2,7 +2,7 @@ from json import dumps
 from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, ListView
 from .models import Post, Hashtag
-from users.models import Follow
+from users.models import Follow, Notification
 import json
 from django.http import HttpResponse
 
@@ -53,6 +53,7 @@ def like_post(request, post_id):
     else:
         post.like.add(profile)
         like = True
+        Notification.objects.create(profile=post.author, message=f'{profile} liked your {post}')
     data = {
         'counter': post.likes_counter(),
         'like': like

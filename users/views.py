@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from .forms import UserRegisterForm, CustomAuthenticationForm
 from django.contrib.auth.views import LoginView
-from django.views.generic import DetailView, CreateView
-from .models import Profile, Follow, Message
+from django.views.generic import DetailView, CreateView, ListView
+from .models import Profile, Follow, Message, Notification
 from posts.models import Post
 import json
 from django.http import HttpResponse, JsonResponse
@@ -100,3 +100,13 @@ def messages(request, profile_pk):
         'messages': messages
     }
     return render(request, 'users/messages.html', context=context)
+
+class NotificationListView(ListView):
+    model = Notification
+    template_name = 'users/notifications.html'
+
+    def get_queryset(self):
+        notifications = Notification.objects.filter(profile=self.request.user.profile).all()
+        print(notifications)
+        notifications.update(is_read=True)
+        return notifications

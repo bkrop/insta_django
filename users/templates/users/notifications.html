@@ -1,0 +1,9 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+    {% for notification in object_list %}
+        <h6>{{ notification.message }}</h6>
+    {% endfor %}
+{% endblock %}

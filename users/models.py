@@ -17,3 +17,8 @@ class Message(models.Model):
     message_to = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='sent')
     content = models.TextField(max_length=250, null=False, blank=False)
     date_of_create = models.DateTimeField(auto_now_add=True)
+
+class Notification(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    is_read = models.BooleanField(default=False)
+    message = models.TextField(max_length=100)

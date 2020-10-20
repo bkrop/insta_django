@@ -8,7 +8,8 @@ from .views import (
     follow_profile,
     search,
     MessageCreateView,
-    messages
+    messages,
+    NotificationListView
 )
     
 
@@ -20,5 +21,6 @@ urlpatterns = [
     path('profile/follow/<int:pk>', follow_profile, name='follow_profile'),
     path('results/', search, name='search'),
     path('create_message/<int:profile_pk>/', MessageCreateView.as_view(), name='create_message'),
-    path('messages/<int:profile_pk>/', messages, name='messages')
+    path('messages/<int:profile_pk>/', messages, name='messages'),
+    path('notifications/', NotificationListView.as_view(), name='notifications')
 ]
