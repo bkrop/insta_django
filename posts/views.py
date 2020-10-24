@@ -1,10 +1,10 @@
-from json import dumps
 from django.shortcuts import render
-from django.views.generic import CreateView, DetailView, ListView
-from .models import Post, Hashtag
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from .models import Post, Hashtag, Comment
 from users.models import Follow, Notification
 import json
 from django.http import HttpResponse
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 class PostCreateView(CreateView):
     model = Post
@@ -34,6 +34,18 @@ class PostListView(ListView):
         posts = Post.objects.filter(author_id__in=profiles).order_by('-date_of_create')
         return posts
 
+class PostUpdateView(UserPassesTestMixin, UpdateView):
+    model = Post
+    template_name = 'posts/create_post.html'
+    fields = ['picture', 'description']
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user.profile == post.author:
+            return True
+        else:
+            return False
+
 def hashtag_posts(request, hashtag):
     hashtag = Hashtag.objects.get(name=hashtag)
     object_list = hashtag.post.all().order_by('-date_of_create')
@@ -59,3 +71,10 @@ def like_post(request, post_id):
         'like': like
     }
     return HttpResponse(json.dumps(data))
+
+def post_comments(request, pk):
+    post = Post.objects.get(pk=pk)
+    context = {
+        'post': post
+    }
+    return render(request, 'posts/comments.html', context=context)

@@ -16,6 +16,10 @@
                     <i class="far fa-heart" style="color: red;"></i>
                 {% endif %} 
             </button>
+            <button type="button" class="showComments" id="{{ post.pk }}">Show comments</button>
+            <div class="comments" id="{{ post.pk }}" style="display: none">
+                {% include 'posts/comments.html' %}
+            </div>
         </form>
         <p></p>
     {% endfor %}

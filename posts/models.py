@@ -1,5 +1,6 @@
 from django.db import models
 from users.models import Profile
+from django.urls import reverse
 
 class Post(models.Model):
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
@@ -24,6 +25,15 @@ class Post(models.Model):
         number = self.like.all().count()
         return number
 
+    def get_absolute_url(self):
+        return reverse('detail_post', kwargs={'pk': self.pk})
+
 class Hashtag(models.Model):
     name = models.CharField(max_length=20)
     post = models.ManyToManyField(Post, related_name='hashtag')
+
+class Comment(models.Model):
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    content = models.TextField(max_length=250, null=False)
+    date_of_create = models.DateTimeField(auto_now_add=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)

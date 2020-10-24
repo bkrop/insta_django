@@ -1,0 +1,5 @@
+
+    {% for comment in post.comment_set.all %}
+        <h6>{{ comment.content }}</h6>
+        <small>{{ comment.author }} / {{ comment.date_of_create }}</small>
+    {% endfor %}

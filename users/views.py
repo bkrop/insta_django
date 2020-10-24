@@ -46,6 +46,7 @@ def follow_profile(request, pk):
         Follow.objects.create(follow_to=profile, follow_by=current_user_profile)
         print('followed')
         text = 'Unfollow'
+        Notification.objects.create(profile=profile, message=f'{current_user_profile} is now following you!')
     data = {
         'text': text
     }
