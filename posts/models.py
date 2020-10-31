@@ -28,6 +28,9 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('detail_post', kwargs={'pk': self.pk})
 
+    def comments_counter(self):
+        return self.comment_set.all().count()
+
 class Hashtag(models.Model):
     name = models.CharField(max_length=20)
     post = models.ManyToManyField(Post, related_name='hashtag')

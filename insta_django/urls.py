@@ -18,13 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 from . import settings
 from django.conf.urls.static import static
-from posts.views import PostListView
+from posts.views import homepage
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('posts/', include('posts.urls')),
-    path('', PostListView.as_view(), name='homepage')
+    path('', homepage, name='homepage')
 ]
 
 if settings.DEBUG:

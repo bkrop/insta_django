@@ -3,8 +3,11 @@ from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from .models import Post, Hashtag, Comment
 from users.models import Follow, Notification
 import json
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.mixins import UserPassesTestMixin
+from .forms import CommentForm
+from django.forms.models import model_to_dict
+from django.views.generic.edit import FormMixin
 
 class PostCreateView(CreateView):
     model = Post
@@ -25,14 +28,51 @@ class PostDetailView(DetailView):
     model = Post
     template_name = 'posts/detail_post.html'
 
-class PostListView(ListView):
-    model = Post
-    template_name = 'posts/homepage.html'
+# class PostListView(FormMixin, ListView):
+#     model = Post
+#     template_name = 'posts/homepage.html'
+#     form_class = CommentForm
 
-    def get_queryset(self):
-        profiles = Follow.objects.filter(follow_by=self.request.user.profile).values_list('follow_to', flat=True)
-        posts = Post.objects.filter(author_id__in=profiles).order_by('-date_of_create')
-        return posts
+#     def get_queryset(self):
+#         profiles = Follow.objects.filter(follow_by=self.request.user.profile).values_list('follow_to', flat=True)
+#         posts = Post.objects.filter(author_id__in=profiles).order_by('-date_of_create')
+#         return posts
+
+#     def post(self, request, *args, **kwargs):
+#         form = self.get_form()
+#         if form.is_valid():
+#             if request.method == 'POST':
+#                 pk = self.request.POST.get('pk')
+#                 post = Post.objects.get(pk=pk)
+#                 new_comment = Comment.objects.create(
+#                     author = self.request.user.profile,
+#                     post = post,
+#                     content = form.cleaned_data['content']
+#                 )
+#                 return JsonResponse({'comment': model_to_dict(new_comment)}, status=200)
+#         else:
+#             return self.form_invalid(form)
+
+def homepage(request):
+    profiles = Follow.objects.filter(follow_by=request.user.profile).values_list('follow_to', flat=True)
+    posts = Post.objects.filter(author_id__in=profiles).order_by('-date_of_create')
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            pk = request.POST.get('pk')
+            post = Post.objects.get(pk=pk)
+            new_comment = Comment.objects.create(
+                author = request.user.profile,
+                post = post,
+                content = form.cleaned_data['content']
+            )
+            return JsonResponse({'comment': model_to_dict(new_comment)}, status=200)
+    form = CommentForm()
+    context = {
+        'posts': posts,
+        'form': form
+    }
+    return render(request, 'posts/homepage.html', context=context)
 
 class PostUpdateView(UserPassesTestMixin, UpdateView):
     model = Post
@@ -74,7 +114,8 @@ def like_post(request, post_id):
 
 def post_comments(request, pk):
     post = Post.objects.get(pk=pk)
+
     context = {
-        'post': post
+        'post': post,
     }
     return render(request, 'posts/comments.html', context=context)

@@ -3,7 +3,7 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-    {% for post in object_list %}
+    {% for post in posts %}
         <a href="{% url 'detail_post' post.id %}"><img src="{{ post.picture.url }}" alt="" class="img-thumbnail" style="width:200px; height: 200px;"></a>
         <h4>{{ post.description_hashtags|safe }}</h4>
         <small><a href="{% url 'profile_detail' post.author.pk %}">{{ post.author }}</a> Likes: <span class="counter" id="{{ post.id }}">{{ post.likes_counter }}</small></span>
@@ -16,11 +16,19 @@
                     <i class="far fa-heart" style="color: red;"></i>
                 {% endif %} 
             </button>
-            <button type="button" class="showComments" id="{{ post.pk }}">Show comments</button>
-            <div class="comments" id="{{ post.pk }}" style="display: none">
+        </form>
+        <button type="button" class="showComments btn btn-link" id="{{ post.pk }}">Show comments({{ post.comments_counter }})</button>
+        <div class="comments" id="{{ post.pk }}" style="display: none">
+            <div class="commentsSep" id="{{ post.pk }}">
                 {% include 'posts/comments.html' %}
             </div>
-        </form>
+            <form action="" method="post" class="commentForm" data-url="{% url 'homepage' %}">
+                {% csrf_token %}
+                <input type="hidden" name="pk" value="{{ post.pk }}">
+                {{ form.as_p }}
+                <button type="button" class="commentBtn" id="{{ post.pk }}">Comment</button>
+            </form>
+        </div>        
         <p></p>
     {% endfor %}
 {% endblock %}
